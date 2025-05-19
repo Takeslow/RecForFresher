@@ -12,13 +12,13 @@ if __name__ == '__main__':
         tf.config.experimental.set_memory_growth(gpu, True)
 
     # TODO：设定超参数
-    test_size=0.1 # 用于划分训练集与测试集(0.1表示9:1)
+    test_size = 0.1 # 用于划分训练集与测试集(0.1表示9:1)
     batch_size = 4096
     epochs = 3
     learning_rate = 0.1
     hidden_units = [256, 128, 64] # Deep部分的隐藏层神经元
-    output_dim=1
-    activation='relu'
+    output_dim = 1
+    activation = 'relu'
 
     # TODO：数据处理
     file_path = 'C:\\Data\\Criteo\\criteo_small.csv'

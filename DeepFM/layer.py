@@ -31,15 +31,15 @@ class FM_layer(Layer):
         linear_part = tf.matmul(inputs, self.w) + self.w0   #shape:(batchsize, 1)
 
         # TODO：计算二阶交互项
-        # inter_part1 表示 Σ((vi×xi)²)
+        # inter_part1 表示 Σ((vi×xi)²) 注意：是矩阵内各元素自身的2次方
         inter_part1 = tf.pow(tf.matmul(inputs, self.v), 2)  #shape:(batchsize, k)
 
-        # inter_part2 表示 Σ(vi²×xi²)
+        # inter_part2 表示 Σ(vi²×xi²) 注意：是矩阵内各元素自身的2次方
         inter_part2 = tf.matmul(tf.pow(inputs, 2), tf.pow(self.v, 2))  #shape:(batchsize, k)
 
         # inter_part 表示 0.5×{ Σ((vi×xi)²) -  Σ(vi²×xi²)  }
         inter_part = 0.5*tf.reduce_sum(inter_part1 - inter_part2, axis=-1, keepdims=True) #shape:(batchsize, 1)
-        # 按隐因子维度求和：tf.reduce_sum(…, axis=-1) 将每个样本在k维度上的交互贡献相加，结果是(batch,1)张量
+        # 按隐向量维度求和：tf.reduce_sum(…, axis=-1) 将每个样本在k维度上的值相加，结果的shape：(batchsize,1)
 
         # TODO：一阶线性项与二阶交互项相加,作为输出
         output = linear_part + inter_part
