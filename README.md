@@ -1,1 +1,3 @@
-Reproduce the classic Recommend-System model  ||  Friendly to freshers
+## 关于数据集
+项目用到的数据在Data文件夹中\
+criteo_small.csv：截取了Criteo数据集中的10000条数据，若想要完整数据集请自行搜索下载
