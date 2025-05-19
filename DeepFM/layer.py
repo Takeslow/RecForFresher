@@ -11,16 +11,16 @@ class FM_layer(Layer):
 
     def build(self, input_shape):
         # 全局偏置量w0
-        self.w0 = self.add_weight(name='w0', shape=(1,), # 大小为 1,后面会再处理为(n,1)
+        self.w0 = self.add_weight(name='w0', shape=(1,), # 大小为 1,后面会再处理为(batch_size,1)
                                   initializer=tf.zeros_initializer(),
                                   trainable=True,)
-        # 一阶线性权重w (221,1)
-        self.w = self.add_weight(name='w', shape=(input_shape[-1], 1), # 大小为(n,1)
+        # 一阶线性权重w , 大小为(batch_size,1) , 即(221,1)
+        self.w = self.add_weight(name='w', shape=(input_shape[-1], 1),
                                  initializer=tf.random_normal_initializer(),
                                  trainable=True,
                                  regularizer=tf.keras.regularizers.l2(self.w_reg)) #L2正则化
-        # 隐向量矩阵v,用于捕捉二阶交互 (221,10)
-        self.v = self.add_weight(name='v', shape=(input_shape[-1], self.k), # 大小为(n,k)
+        # 隐向量矩阵v,用于捕捉二阶交互 , 大小为(batch_size,k) , 即 (221,10)
+        self.v = self.add_weight(name='v', shape=(input_shape[-1], self.k),
                                  initializer=tf.random_normal_initializer(),
                                  trainable=True,
                                  regularizer=tf.keras.regularizers.l2(self.v_reg)) #L2正则化
