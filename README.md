@@ -1,2 +1,2 @@
 # RecForFresher
-Reproduce the classic recommendation system model  ||  Friendly to freshers
+Reproduce the classic Recommend-System model  ||  Friendly to freshers
