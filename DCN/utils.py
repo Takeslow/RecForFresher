@@ -3,7 +3,6 @@ from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 
-
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 def sparseFeature(feat, feat_onehot_dim, embed_dim):
@@ -25,7 +24,10 @@ def create_criteo_dataset(file_path, embed_dim=8, test_size=0.2):
 
     # 归一化
     data[dense_features] = MinMaxScaler().fit_transform(data[dense_features])
-    # MinMaxScaler的fit_transform函数对数据先拟合,找到数据的整体指标，如均值、方差、最大值最小值等，然后对数据集进行转换transform，从而实现数据的标准化、归一化操作。
+    # MinMaxScaler的fit函数可以计算出某列特征中的最大值、最小值、均值、方差等属性，与transform函数配套使用；
+    # transform函数可以对某列特征进行归一化和标准化；
+    # fit_transform函数对数据先拟合
+    # fit，找到数据的整体指标，如均值、方差、最大值最小值等，然后对数据集进行转换transform，从而实现数据的标准化、归一化操作。
     # （参考链接https: // cloud.tencent.com / developer / article / 1770568）
 
     # LabelEncoding编码(deep侧输入)
@@ -38,7 +40,7 @@ def create_criteo_dataset(file_path, embed_dim=8, test_size=0.2):
     onehot_data = pd.get_dummies(sparse_df, prefix=sparse_features)
     # get_dummies函数是利用pandas实现one hot encode的方式；
 
-    # 准备训练输入 X 和标签 y
+    # 准备训练输入 X 和标签 y  df=df.loc[:,[‘name1’,‘name2’,‘name3’]]
     X = data.drop('label',axis=1)
     y = data[['label']]
 
