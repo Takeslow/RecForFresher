@@ -1,0 +1,6 @@
+python==3.6.13
+tensorflow=2.2.0
+numpy==1.19.5
+pandas=1.1.5
+cudatoolkit==10.1.168 
+cudnn==7.6.5

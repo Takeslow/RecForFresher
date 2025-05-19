@@ -1,9 +1,8 @@
 import tensorflow as tf
-from model import DeepFM
+from model import WideDeep
 from utils import create_criteo_dataset, make_datasets
 from tensorflow.keras import losses, metrics
 from tensorflow.keras.optimizers import Adam
-
 
 if __name__ == '__main__':
 
@@ -16,13 +15,10 @@ if __name__ == '__main__':
     test_size=0.1 # 用于划分训练集与测试集(0.1表示9:1)
     batch_size = 4096
     epochs = 3
-    learning_rate = 0.01
-    hidden_units = [256, 128, 64]
+    learning_rate = 0.1
+    hidden_units = [256, 128, 64] # Deep部分的隐藏层神经元
     output_dim=1
     activation='relu'
-    k = 10   # 隐向量v的维度(n,k)
-    w_reg = 1e-4  # w的L2正则化系数
-    v_reg = 1e-4  # v的L2正则化系数
 
     # TODO：数据处理
     file_path = 'C:\\Data\\Criteo\\criteo_small.csv'
@@ -34,17 +30,18 @@ if __name__ == '__main__':
     # 明确使用 GPU:0 构建分布式策略 PS:根据设备条件设置不同策略
     strategy = tf.distribute.MirroredStrategy(devices=["/GPU:0"])
     # MirroredStrategy 会自动在所有可见 GPU 上复制模型，并在每个 batch 内做数据并行
+
     with strategy.scope():  #在 scope 内构建并编译模型
-        model = DeepFM(feature_columns, k, w_reg, v_reg, hidden_units, output_dim, activation)
+        model = WideDeep(feature_columns, hidden_units=hidden_units, output_dim=output_dim, activation=activation)
         model.compile(
-            optimizer=Adam(learning_rate=learning_rate), #Adam优化
-            loss=losses.BinaryCrossentropy(), #交叉熵
+            optimizer=Adam(learning_rate=learning_rate), # Adam优化器
+            loss=losses.BinaryCrossentropy(),  # 交叉熵
             metrics=[metrics.BinaryAccuracy(), metrics.AUC()]  # ACC与AUC
         )
 
     # TODO：训练
     history = model.fit(
-        train_ds,
+        train_ds,   # 训练的输入与输出(x,y)
         epochs=epochs
     )
     #运行过程中，Keras 会自动在每个 epoch 后输出 loss/acc/auc
