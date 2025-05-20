@@ -37,7 +37,7 @@ class FM_layer(Layer):
         # inter_part2 表示 Σ(vi²×xi²) 注意：是矩阵内各元素自身的2次方
         inter_part2 = tf.matmul(tf.pow(inputs, 2), tf.pow(self.v, 2))  #shape:(batchsize, k)
 
-        # inter_part 表示 0.5×{ Σ((vi×xi)²) -  Σ(vi²×xi²)  }
+        # inter_part 表示 0.5× Σ { Σ((vi×xi)²) -  Σ(vi²×xi²)  }
         inter_part = 0.5*tf.reduce_sum(inter_part1 - inter_part2, axis=-1, keepdims=True) #shape:(batchsize, 1)
         # 按隐向量维度求和：tf.reduce_sum(…, axis=-1) 将每个样本在k维度上的值相加，结果的shape：(batchsize,1)
 
